@@ -130,4 +130,4 @@ Contributions, issues, and feature requests are welcome!
 
 ## License
 
-This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE&utm_source=gemini).
+This project is open-source and available under the [MIT License]([https://www.google.com/search?q=LICENSE&utm_source=gemini](https://github.com/hashleycuachin03-code/AttendanceManagementSystem/blob/main/LICENSE)).
