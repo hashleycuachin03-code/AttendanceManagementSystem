@@ -36,11 +36,9 @@ Before running the application, ensure you have the following installed on your 
 ## Installation & Setup
 
 1. **Clone the Repository:**
-```bash
-git clone https://github.com/hashleycuachin03-code/AttendanceManagementSystem.git
-
 ```
-
+   git clone [https://github.com/hashleycuachin03-code/AttendanceManagementSystem.git](https://github.com/hashleycuachin03-code/AttendanceManagementSystem.git)
+```
 
 2. **Open Project in NetBeans:**
 * Launch **Apache NetBeans IDE**.
@@ -49,17 +47,41 @@ git clone https://github.com/hashleycuachin03-code/AttendanceManagementSystem.gi
 * Click **Open Project**.
 
 
-3. **Configure Database (If Applicable):**
-* Start your local database server (e.g., MySQL via XAMPP).
-* Import the provided `.sql` database schema file into your database manager.
-* Ensure the database configuration settings in your Java source code match your MySQL credentials:
+3. **Configure Database (via phpMyAdmin):**
+* Start your local database server (e.g., MySQL / Apache via XAMPP).
+* Open **phpMyAdmin** in your browser (`http://localhost/phpmyadmin`).
+* Create a new database for the project.
+* Click on the **SQL** tab at the top of phpMyAdmin.
+* Open the `.sql` file located inside the `MySQL` folder in this repository, copy its entire contents, and paste it into the SQL query box.
+* Click **Go** to execute the query and set up the tables automatically.
+* Update your database credentials in the Java project source code to match:
 * **URL:** `jdbc:mysql://localhost:3306/your_database_name`
 * **Username:** `root`
-* **Password:** *(leave empty or enter your MySQL password)*
+* **Password:** (leave this empty)
 
 
+---
 
+### **Project Structure** 
 
+```text
+AttendanceManagementSystem/
+│
+├── JavaApplication1/         # NetBeans Project Root
+│   ├── src/
+│   │   ├── ui/               # Swing GUI Forms / Panels (.java and .form files)
+│   │   ├── database/         # Database Connection Class (JDBC Helpers)
+│   │   └── models/           # Data Models (User, Attendance, Logs)
+│   ├── build/                # Compiled Bytecode (.class files)
+│   ├── nbproject/            # NetBeans Project Configuration
+│   └── build.xml             # Ant Build Script
+│
+├── MySQL/                    # SQL Database Scripts
+│   └── schema.sql            # Ready-to-use SQL file for phpMyAdmin
+│
+└── README.md
+
+```
 
 ---
 
@@ -74,27 +96,7 @@ git clone https://github.com/hashleycuachin03-code/AttendanceManagementSystem.gi
 4. Run the project:
 * Press **`F6`** (Run Main Project) or **`Shift + F6`** (Run Selected File).
 
-
-
 ---
-
-## Project Structure
-
-```text
-AttendanceManagementSystem/
-│
-├── JavaApplication1/
-│   ├── src/
-│   │   ├── ui/               # Swing GUI Forms / Panels (.java and .form files)
-│   │   ├── database/         # Database Connection Class (JDBC Helpers)
-│   │   └── models/           # Data Models (User, Attendance, Logs)
-│   ├── build/                # Compiled Bytecode (.class files)
-│   ├── nbproject/            # NetBeans Project Configuration
-│   └── build.xml             # Ant Build Script
-│
-└── README.md
-
-```
 
 ---
 
