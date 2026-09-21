@@ -1,5 +1,10 @@
 # Attendance Management System
 
+![Java Version](https://img.shields.io/badge/Java-8%2B-orange.svg)
+![IDE](https://img.shields.io/badge/IDE-Apache%20NetBeans-blue.svg)
+![UI Framework](https://img.shields.io/badge/UI-Java%20Swing-green.svg)
+![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)
+
 A desktop-based Attendance Management System designed to streamline time tracking, manage attendance records, and simplify user logs using a modern Java Swing GUI built in Apache NetBeans.
 
 ---
