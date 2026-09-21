@@ -16,7 +16,14 @@ public class admin_shift_view extends javax.swing.JFrame {
      * Creates new form employee_shifts
      */
     public admin_shift_view() {
+        ThemeManager.initialize();
         initComponents();
+        setTitle("Employee Shift Monitor");
+        setMinimumSize(new java.awt.Dimension(800, 520));
+        getContentPane().setBackground(ThemeManager.APP_BACKGROUND);
+        ThemeManager.styleTable(tbl_employee_shifts);
+        ThemeManager.styleButton(btnRefresh, true);
+        ThemeManager.styleButton(btn_timeIn, false);
         loadEmployeeShifts();
 
     }

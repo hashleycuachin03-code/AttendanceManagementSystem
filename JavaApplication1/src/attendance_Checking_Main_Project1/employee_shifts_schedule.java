@@ -14,7 +14,17 @@ public class employee_shifts_schedule extends javax.swing.JFrame {
     private int employeeShiftId = -1;
 
     public employee_shifts_schedule() {
+        ThemeManager.initialize();
         initComponents();
+        setTitle("Shift Schedule");
+        setMinimumSize(new Dimension(620, 500));
+        getContentPane().setBackground(ThemeManager.APP_BACKGROUND);
+        ThemeManager.styleField(employeeIdField);
+        ThemeManager.styleField(shiftComboBox);
+        ThemeManager.styleButton(checkInButton, true);
+        ThemeManager.styleButton(checkOutButton, false);
+        ThemeManager.styleButton(jButton1, false);
+        statusLabel.setForeground(ThemeManager.MUTED_TEXT);
         populateShiftComboBox();
 
     }

@@ -16,7 +16,14 @@ public class attendance_record_admin extends javax.swing.JFrame {
      * Creates new form attendance_record
      */
     public attendance_record_admin() {
+        ThemeManager.initialize();
         initComponents();
+        setTitle("Attendance Records");
+        setMinimumSize(new java.awt.Dimension(900, 560));
+        getContentPane().setBackground(ThemeManager.APP_BACKGROUND);
+        ThemeManager.styleTable(tbl_attendanceRecord);
+        ThemeManager.styleButton(btnRefresh, true);
+        ThemeManager.styleButton(btn_timeIn, false);
         loadAttendanceRecords();
     }
 

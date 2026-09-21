@@ -1,12 +1,24 @@
 
 package attendance_Checking_Main_Project1;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,7 +27,26 @@ public class employee_info extends javax.swing.JFrame {
     private static final String EMPLOYEE_COLUMNS = "employee_Id, first_Name, last_Name, email, phone_Number, address";
 
     public employee_info() {
+        ThemeManager.initialize();
         initComponents();
+        setTitle("Employee Management");
+        setMinimumSize(new java.awt.Dimension(900, 700));
+        getContentPane().setBackground(ThemeManager.APP_BACKGROUND);
+        ThemeManager.styleTable(tbl_emloyeeInfo);
+        ThemeManager.styleField(txtfname);
+        ThemeManager.styleField(txtlname);
+        ThemeManager.styleField(txtemail);
+        ThemeManager.styleField(txtcontact);
+        ThemeManager.styleField(txtaddress);
+        ThemeManager.styleField(txtId);
+        ThemeManager.styleButton(btn_add, true);
+        ThemeManager.styleButton(btn_update, false);
+        ThemeManager.styleButton(btn_delete, false);
+        ThemeManager.styleButton(btnSearch, false);
+        ThemeManager.styleButton(btnAttendanceRecord, false);
+        ThemeManager.styleButton(btnEmployeeShift, false);
+        ThemeManager.styleButton(btnHome, false);
+        initializeAdminHomeLayout();
         refreshEmployeeData();
     }
 
@@ -108,6 +139,125 @@ public class employee_info extends javax.swing.JFrame {
     private void showDatabaseError(String operation, SQLException error) {
         JOptionPane.showMessageDialog(this, "Could not " + operation + ". " + error.getMessage(), "Database error",
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void initializeAdminHomeLayout() {
+        setTitle("Admin Home | Employee Directory");
+        setPreferredSize(new Dimension(1280, 800));
+
+        JPanel root = new JPanel(new BorderLayout(0, 20));
+        root.setBorder(BorderFactory.createEmptyBorder(28, 32, 22, 32));
+        root.setBackground(ThemeManager.APP_BACKGROUND);
+
+        JPanel header = new JPanel();
+        header.setOpaque(false);
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        JLabel eyebrow = new JLabel("ADMINISTRATION");
+        eyebrow.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+        eyebrow.setForeground(ThemeManager.PRIMARY);
+        JLabel title = new JLabel("Employee directory");
+        title.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 28));
+        title.setForeground(ThemeManager.TEXT);
+        JLabel subtitle = new JLabel("View, create, and maintain employee records.");
+        subtitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        subtitle.setForeground(ThemeManager.MUTED_TEXT);
+        header.add(eyebrow);
+        header.add(Box.createVerticalStrut(5));
+        header.add(title);
+        header.add(Box.createVerticalStrut(4));
+        header.add(subtitle);
+        root.add(header, BorderLayout.NORTH);
+
+        JPanel directoryPanel = new JPanel(new BorderLayout(0, 12));
+        directoryPanel.setBackground(ThemeManager.SURFACE);
+        directoryPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ThemeManager.BORDER),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        JLabel directoryTitle = new JLabel("All employees");
+        directoryTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+        directoryTitle.setForeground(ThemeManager.TEXT);
+        directoryPanel.add(directoryTitle, BorderLayout.NORTH);
+        jScrollPane1.setBorder(BorderFactory.createLineBorder(ThemeManager.BORDER));
+        directoryPanel.add(jScrollPane1, BorderLayout.CENTER);
+
+        JPanel editorPanel = new JPanel(new BorderLayout(0, 16));
+        editorPanel.setBackground(ThemeManager.SURFACE);
+        editorPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ThemeManager.BORDER),
+                BorderFactory.createEmptyBorder(20, 22, 20, 22)));
+        JLabel editorTitle = new JLabel("Employee details");
+        editorTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+        editorTitle.setForeground(ThemeManager.TEXT);
+        editorPanel.add(editorTitle, BorderLayout.NORTH);
+
+        JPanel form = new JPanel(new GridBagLayout());
+        form.setOpaque(false);
+        addEditorField(form, 0, "First name", txtfname);
+        addEditorField(form, 1, "Last name", txtlname);
+        addEditorField(form, 2, "Email", txtemail);
+        addEditorField(form, 3, "Phone", txtcontact);
+        addEditorField(form, 4, "Address", txtaddress);
+        addEditorField(form, 5, "Employee ID", txtId);
+        addEditorField(form, 6, "Find record", btnSearch);
+        editorPanel.add(form, BorderLayout.CENTER);
+
+        JPanel editorActions = new JPanel();
+        editorActions.setOpaque(false);
+        editorActions.setLayout(new BoxLayout(editorActions, BoxLayout.X_AXIS));
+        editorActions.add(btn_add);
+        editorActions.add(Box.createHorizontalStrut(8));
+        editorActions.add(btn_update);
+        editorActions.add(Box.createHorizontalStrut(8));
+        editorActions.add(btn_delete);
+        editorPanel.add(editorActions, BorderLayout.SOUTH);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, directoryPanel, editorPanel);
+        splitPane.setBorder(null);
+        splitPane.setOpaque(false);
+        splitPane.setDividerSize(8);
+        splitPane.setResizeWeight(0.64);
+        root.add(splitPane, BorderLayout.CENTER);
+
+        JPanel footer = new JPanel(new BorderLayout());
+        footer.setOpaque(false);
+        JLabel footerText = new JLabel("Administration tools");
+        footerText.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+        footerText.setForeground(ThemeManager.MUTED_TEXT);
+        JPanel navigation = new JPanel();
+        navigation.setOpaque(false);
+        navigation.setLayout(new BoxLayout(navigation, BoxLayout.X_AXIS));
+        navigation.add(btnEmployeeShift);
+        navigation.add(Box.createHorizontalStrut(8));
+        navigation.add(btnAttendanceRecord);
+        navigation.add(Box.createHorizontalGlue());
+        navigation.add(btnHome);
+        footer.add(footerText, BorderLayout.WEST);
+        footer.add(navigation, BorderLayout.CENTER);
+        root.add(footer, BorderLayout.SOUTH);
+
+        setContentPane(root);
+        pack();
+        setMinimumSize(new Dimension(1000, 680));
+        setLocationRelativeTo(null);
+    }
+
+    private void addEditorField(JPanel form, int row, String labelText, JComponent component) {
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = row;
+        labelConstraints.anchor = GridBagConstraints.WEST;
+        labelConstraints.insets = new Insets(0, 0, 12, 12);
+        JLabel label = new JLabel(labelText);
+        ThemeManager.styleLabel(label);
+        form.add(label, labelConstraints);
+
+        GridBagConstraints fieldConstraints = new GridBagConstraints();
+        fieldConstraints.gridx = 1;
+        fieldConstraints.gridy = row;
+        fieldConstraints.weightx = 1;
+        fieldConstraints.fill = GridBagConstraints.HORIZONTAL;
+        fieldConstraints.insets = new Insets(0, 0, 12, 0);
+        form.add(component, fieldConstraints);
     }
 
     @SuppressWarnings("unchecked")

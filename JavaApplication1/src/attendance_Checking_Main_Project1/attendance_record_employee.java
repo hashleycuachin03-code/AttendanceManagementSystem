@@ -4,15 +4,31 @@
  */
 package attendance_Checking_Main_Project1;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class attendance_record_employee extends javax.swing.JFrame {
 
+    private JComboBox<String> statusComboBox;
+    private JLabel feedbackLabel;
+
     public attendance_record_employee() {
         initComponents();
+        initializeModernUi();
     }
 
     private void recordTimeIn() {
@@ -24,13 +40,13 @@ public class attendance_record_employee extends javax.swing.JFrame {
         try (Connection connection = DatabaseConnection.open();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, employeeId);
-            statement.setString(2, statusTextField.getText().trim());
+            statement.setString(2, (String) statusComboBox.getSelectedItem());
             statement.setString(3, remarksTextArea.getText().trim());
             if (statement.executeUpdate() != 1) {
-                JOptionPane.showMessageDialog(this, "Time In was not recorded.");
+                showFeedback("Time In was not recorded.", ThemeManager.ERROR);
                 return;
             }
-            JOptionPane.showMessageDialog(this, "Time In recorded successfully.");
+            showFeedback("Time In recorded successfully.", ThemeManager.SUCCESS);
         } catch (SQLException ex) {
             showDatabaseError("record Time In", ex);
         }
@@ -48,9 +64,9 @@ public class attendance_record_employee extends javax.swing.JFrame {
             int rowsUpdated = statement.executeUpdate();
 
             if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Time Out recorded successfully.");
+                showFeedback("Time Out recorded successfully.", ThemeManager.SUCCESS);
             } else {
-                JOptionPane.showMessageDialog(this, "No active Time In record found for this employee.");
+                showFeedback("No active Time In record found for this employee.", ThemeManager.ERROR);
             }
         } catch (SQLException ex) {
             showDatabaseError("record Time Out", ex);
@@ -72,8 +88,150 @@ public class attendance_record_employee extends javax.swing.JFrame {
     }
 
     private void showDatabaseError(String operation, SQLException error) {
+        showFeedback("Could not " + operation + ".", ThemeManager.ERROR);
         JOptionPane.showMessageDialog(this, "Could not " + operation + ". " + error.getMessage(), "Database error",
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void initializeModernUi() {
+        ThemeManager.initialize();
+        setTitle("Employee Attendance");
+        setMinimumSize(new Dimension(900, 620));
+        setPreferredSize(new Dimension(1100, 720));
+
+        statusComboBox = new JComboBox<>(new String[] { "Present", "Late", "Absent" });
+        statusComboBox.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+        statusComboBox.setPreferredSize(new Dimension(260, 38));
+        statusComboBox.setBackground(ThemeManager.SURFACE);
+        statusComboBox.setForeground(ThemeManager.TEXT);
+
+        ThemeManager.styleField(employeeIdTextField);
+        ThemeManager.styleTextArea(remarksTextArea);
+        ThemeManager.styleButton(timeInButton, true);
+        ThemeManager.styleButton(timeOutButton, false);
+        ThemeManager.styleButton(btn_schedule, false);
+        ThemeManager.styleButton(btnHome, false);
+
+        JPanel root = new JPanel(new BorderLayout(0, 24));
+        root.setBorder(BorderFactory.createEmptyBorder(28, 36, 24, 36));
+        root.setBackground(ThemeManager.APP_BACKGROUND);
+
+        JPanel header = new JPanel();
+        header.setOpaque(false);
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        JLabel eyebrow = new JLabel("EMPLOYEE SELF-SERVICE");
+        eyebrow.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+        eyebrow.setForeground(ThemeManager.PRIMARY);
+        jLabel6.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 26));
+        jLabel6.setForeground(ThemeManager.TEXT);
+        jLabel6.setText("Record your attendance");
+        header.add(eyebrow);
+        header.add(Box.createVerticalStrut(6));
+        header.add(jLabel6);
+        header.add(Box.createVerticalStrut(4));
+        JLabel subtitle = new JLabel("Use the form below to start or end your workday.");
+        subtitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        subtitle.setForeground(ThemeManager.MUTED_TEXT);
+        header.add(subtitle);
+        root.add(header, BorderLayout.NORTH);
+
+        JPanel content = new JPanel(new GridBagLayout());
+        content.setBackground(ThemeManager.SURFACE);
+        content.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ThemeManager.BORDER),
+                BorderFactory.createEmptyBorder(28, 30, 28, 30)));
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(0, 0, 16, 16);
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1;
+
+        addFormLabel(content, 0, "Employee ID", "Enter the ID assigned to you.");
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        content.add(employeeIdTextField, constraints);
+
+        addFormLabel(content, 1, "Attendance status", "Choose the status for this check-in.");
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        content.add(statusComboBox, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 3;
+        constraints.insets = new Insets(4, 0, 8, 0);
+        JLabel remarksLabel = new JLabel("Remarks");
+        ThemeManager.styleLabel(remarksLabel);
+        content.add(remarksLabel, constraints);
+
+        constraints.gridy = 3;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(0, 0, 20, 0);
+        jScrollPane1.setBorder(BorderFactory.createLineBorder(ThemeManager.BORDER));
+        jScrollPane1.setPreferredSize(new Dimension(500, 120));
+        content.add(jScrollPane1, constraints);
+
+        constraints.gridy = 4;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(0, 0, 0, 0);
+        JPanel actions = new JPanel();
+        actions.setOpaque(false);
+        actions.setLayout(new BoxLayout(actions, BoxLayout.X_AXIS));
+        actions.add(timeInButton);
+        actions.add(Box.createHorizontalStrut(10));
+        actions.add(timeOutButton);
+        actions.add(Box.createHorizontalGlue());
+        actions.add(btn_schedule);
+        actions.add(Box.createHorizontalStrut(10));
+        actions.add(btnHome);
+        content.add(actions, constraints);
+
+        JPanel cardWrapper = new JPanel(new BorderLayout());
+        cardWrapper.setOpaque(false);
+        cardWrapper.add(content, BorderLayout.CENTER);
+        root.add(cardWrapper, BorderLayout.CENTER);
+
+        feedbackLabel = new JLabel("Ready to record attendance.");
+        feedbackLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        feedbackLabel.setForeground(ThemeManager.MUTED_TEXT);
+        feedbackLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
+        root.add(feedbackLabel, BorderLayout.SOUTH);
+
+        setContentPane(root);
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    private void addFormLabel(JPanel panel, int row, String title, String helper) {
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = row;
+        labelConstraints.gridwidth = 1;
+        labelConstraints.weightx = 0;
+        labelConstraints.anchor = GridBagConstraints.WEST;
+        labelConstraints.insets = new Insets(0, 0, 16, 16);
+        JPanel labelPanel = new JPanel();
+        labelPanel.setOpaque(false);
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+        JLabel titleLabel = new JLabel(title);
+        ThemeManager.styleLabel(titleLabel);
+        JLabel helperLabel = new JLabel(helper);
+        helperLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11));
+        helperLabel.setForeground(ThemeManager.MUTED_TEXT);
+        labelPanel.add(titleLabel);
+        labelPanel.add(Box.createVerticalStrut(3));
+        labelPanel.add(helperLabel);
+        panel.add(labelPanel, labelConstraints);
+    }
+
+    private void showFeedback(String message, Color color) {
+        if (feedbackLabel != null) {
+            feedbackLabel.setText(message);
+            feedbackLabel.setForeground(color);
+        }
     }
 
     @SuppressWarnings("unchecked")
